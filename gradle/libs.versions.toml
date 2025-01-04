@@ -1,0 +1,9 @@
+[versions]
+tpm4k = "1.0.0"
+kotlin = "2.0.21" # https://kotlinlang.org/docs/releases.html#release-details
+tpmcpp = "1.0.5" # https://github.com/trusted-kotlin/tpm-cpp/releases
+download = "5.6.0" # https://github.com/michel-kraemer/gradle-download-task/releases
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+download = { id = "de.undercouch.download", version.ref = "download" }
