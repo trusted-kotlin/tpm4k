@@ -16,13 +16,27 @@
 
 package de.cacheoverflow.tpm4k
 
+import de.cacheoverflow.tpm4k.codec.TPMMessageDecoder
+import de.cacheoverflow.tpm4k.codec.TPMMessageEncoder
 import kotlinx.cinterop.*
+import kotlinx.io.Buffer
+import kotlinx.io.Source
+import kotlinx.io.readByteArray
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.SerializationStrategy
 import tpm.*
 
+/**
+ * This class provides a platform-independent API for interacting with the TPM and send commands to the TPM and receive
+ * responses from it.
+ *
+ * @author Cedric Hammes
+ * @since  04/01/2024
+ */
 @OptIn(ExperimentalForeignApi::class)
 value class TPMContext private constructor(private val contextHandle: tpm_object_t) : AutoCloseable {
 
-    fun emitMessage(message: ByteArray): Result<ByteArray> = memScoped {
+    private fun emitMessage(message: ByteArray): Result<ByteArray> = memScoped {
         val response = nativeHeap.alloc<tpm_object_t>()
         response.type = TPM_OBJECT_MESSAGE
         message.usePinned { pinned ->
@@ -41,6 +55,23 @@ value class TPMContext private constructor(private val contextHandle: tpm_object
             tpm_context_close(response.ptr)
             Result.success(responseBytes)
         }
+    }
+
+    private fun TPMContext.emitMessage(message: Source): Result<ByteArray> = emitMessage(message.readByteArray())
+
+    fun <T, R> TPMContext.emitMessage(
+        command: T,
+        serializationStrategy: SerializationStrategy<T>,
+        deserializationStrategy: DeserializationStrategy<R>
+    ): Result<R> {
+        val buffer = Buffer().also { TPMMessageEncoder.encode(it, command, serializationStrategy) }
+        val response = buffer.use { emitMessage(it) }
+        return Result.success(
+            TPMMessageDecoder.decode(
+                response.getOrNull() ?: return Result.failure(requireNotNull(response.exceptionOrNull())),
+                deserializationStrategy
+            )
+        )
     }
 
     override fun close() {

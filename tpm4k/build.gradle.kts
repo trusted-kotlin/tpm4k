@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.konan.target.KonanTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.download)
 }
 
@@ -43,12 +44,6 @@ kotlin {
             }
         }
 
-        target.binaries {
-            executable {
-                entryPoint = "main"
-            }
-        }
-
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         target.compilerOptions {
             freeCompilerArgs.addAll(
@@ -62,6 +57,15 @@ kotlin {
                     }"
                 ).get().asFile.absolutePath
             )
+        }
+    }
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(libs.kotlinx.serialization.core)
+                api(libs.kotlinx.io.core)
+            }
         }
     }
 }
