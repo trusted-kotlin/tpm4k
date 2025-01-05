@@ -16,8 +16,6 @@
 
 package de.cacheoverflow.tpm4k
 
-import de.cacheoverflow.tpm4k.codec.TPMMessageDecoder
-import de.cacheoverflow.tpm4k.codec.TPMMessageEncoder
 import kotlinx.cinterop.*
 import kotlinx.io.Buffer
 import kotlinx.io.Source

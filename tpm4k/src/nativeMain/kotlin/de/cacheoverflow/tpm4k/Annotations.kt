@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.cacheoverflow.tpm4k.codec
+package de.cacheoverflow.tpm4k
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialInfo

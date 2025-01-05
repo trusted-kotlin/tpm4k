@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.cacheoverflow.tpm4k.codec
+package de.cacheoverflow.tpm4k
 
 import kotlinx.io.InternalIoApi
 import kotlinx.io.Sink

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package de.cacheoverflow.tpm4k
+package de.cacheoverflow.tpm4k.command
 
-import de.cacheoverflow.tpm4k.codec.TPMCommand
-import de.cacheoverflow.tpm4k.codec.TPMResponse
+import de.cacheoverflow.tpm4k.TPMContext
+import de.cacheoverflow.tpm4k.TPMCommand
+import de.cacheoverflow.tpm4k.TPMResponse
 import kotlinx.serialization.Serializable
 
 /**
@@ -35,8 +36,7 @@ data class GetBytesRequest(val bytesCount: Short)
 @TPMResponse
 @Serializable
 data class GetBytesResponse(val bytes: ByteArray) {
-    override fun equals(other: Any?): Boolean =
-        if (other !is GetBytesResponse) false else bytes.contentEquals(other.bytes)
+    override fun equals(other: Any?): Boolean = other is GetBytesResponse && bytes.contentEquals(other.bytes)
     override fun hashCode(): Int = bytes.contentHashCode()
 }
 

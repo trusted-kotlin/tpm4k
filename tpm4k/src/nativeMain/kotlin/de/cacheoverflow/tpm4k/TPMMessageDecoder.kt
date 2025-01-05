@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package de.cacheoverflow.tpm4k.codec
+package de.cacheoverflow.tpm4k
 
 import kotlinx.io.Buffer
-import kotlinx.io.InternalIoApi
 import kotlinx.io.Source
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -38,7 +37,7 @@ internal class TPMMessageDecoder private constructor(private val source: Source)
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int = CompositeDecoder.DECODE_DONE
     override fun decodeSequentially(): Boolean = true
 
-    @OptIn(ExperimentalSerializationApi::class, InternalIoApi::class)
+    @OptIn(ExperimentalSerializationApi::class)
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
         return when (descriptor.kind) {
             StructureKind.CLASS -> {
