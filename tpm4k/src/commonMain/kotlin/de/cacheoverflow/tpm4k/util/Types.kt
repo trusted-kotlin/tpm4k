@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package de.cacheoverflow.tpm4k
+package de.cacheoverflow.tpm4k.util
 
-import de.cacheoverflow.tpm4k.command.randomBytes
-
-fun main() {
-    TPMContext.new().getOrThrow().use { context ->
-        val randomBytes = context.randomBytes(10).getOrThrow()
-    }
-}
+/**
+ * This type is representing a handle used in TPMs. Handles are 32-bit values used to reference shielded locations of
+ * objects within the TPM.
+ *
+ * @author Cedric Hammes
+ * @since  05/01/2024
+ *
+ * @see 8.1 "Handles/Introduction", ISO/IEC 11889-1:2015 "TPM Library: Architecture"
+ */
+typealias TpmHandle = UInt

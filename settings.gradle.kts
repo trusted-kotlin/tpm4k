@@ -8,6 +8,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+        maven("https://gitlab.com/api/v4/projects/65231927/packages/maven")
     }
 }
 

@@ -1,5 +1,4 @@
 import de.undercouch.gradle.tasks.download.Download
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.konan.target.KonanTarget
 
 plugins {
@@ -34,7 +33,12 @@ val unzipTpmCppTask = tasks.create<Copy>("unzipTpmCpp") {
 }
 
 kotlin {
-    listOf(linuxX64(), mingwX64()).forEach { target ->
+    jvm {
+        withJava()
+    }
+    listOf(linuxX64(), mingwX64()).forEach { target -> // TODO: Add Linux arm64 Support
+        target.binaries.sharedLib()
+
         target.compilations["main"].cinterops {
             val tpm by creating {
                 includeDirs(layout.buildDirectory.dir("tpm-cpp/include").get().asFile.absolutePath)
@@ -44,7 +48,6 @@ kotlin {
             }
         }
 
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         target.compilerOptions {
             freeCompilerArgs.addAll(
                 "-include-binary", layout.buildDirectory.file(
@@ -61,11 +64,17 @@ kotlin {
     }
 
     sourceSets {
-        commonMain {
-            dependencies {
-                implementation(libs.kotlinx.serialization.core)
-                api(libs.kotlinx.io.core)
+        all {
+            compilerOptions {
+                optIn.add("kotlinx.cinterop.ExperimentalForeignApi")
             }
+        }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.core)
+            api(libs.kotlinx.io.core)
+        }
+        jvmMain.dependencies {
+            implementation(libs.jna)
         }
     }
 }

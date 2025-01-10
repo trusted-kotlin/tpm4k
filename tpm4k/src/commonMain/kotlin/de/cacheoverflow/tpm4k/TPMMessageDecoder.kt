@@ -45,8 +45,7 @@ internal class TPMMessageDecoder private constructor(private val source: Source)
                 when (annotation) {
                     is TPMResponse -> {
                         source.readShort()
-                        source.readInt() // TODO: Length read ensure
-                        source.readInt() // TODO: Status
+                        source.readInt() // TODO: Handle response code
                         return TPMMessageDecoder(source)
                     }
 
@@ -64,6 +63,7 @@ internal class TPMMessageDecoder private constructor(private val source: Source)
 
     // Read primitive types
     override fun decodeCollectionSize(descriptor: SerialDescriptor): Int = source.readShort().toInt()
+    override fun decodeBoolean(): Boolean = source.readByte() == 1.toByte()
     override fun decodeByte(): Byte = source.readByte()
     override fun decodeShort(): Short = source.readShort()
     override fun decodeInt(): Int = source.readInt()

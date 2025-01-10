@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package de.cacheoverflow.tpm4k.command
+package de.cacheoverflow.tpm4k.message
 
-import de.cacheoverflow.tpm4k.TPMContext
+import de.cacheoverflow.tpm4k.util.EnumResponseCode
 import de.cacheoverflow.tpm4k.TPMCommand
 import de.cacheoverflow.tpm4k.TPMResponse
 import kotlinx.serialization.Serializable
@@ -35,20 +35,7 @@ data class GetBytesRequest(val bytesCount: Short)
  */
 @TPMResponse
 @Serializable
-data class GetBytesResponse(val bytes: ByteArray) {
+data class GetBytesResponse(val status: EnumResponseCode, val bytes: ByteArray) {
     override fun equals(other: Any?): Boolean = other is GetBytesResponse && bytes.contentEquals(other.bytes)
     override fun hashCode(): Int = bytes.contentHashCode()
 }
-
-/**
- * This function calls the TPM to as much generate random bytes as specified by the caller of the function. After the
- * TPM sent its response this function extracts the random bytes out of the message.
- *
- * @param count The count of the bytes to get generated
- * @return      A result with the byte array filled with the data
- *
- * @author Cedric Hammes
- * @since  05/01/2024
- */
-inline fun TPMContext.randomBytes(count: Short): Result<ByteArray> =
-    emitMessage(GetBytesRequest(count), GetBytesRequest.serializer(), GetBytesResponse.serializer()).map { it.bytes }

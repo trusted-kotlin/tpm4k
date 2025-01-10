@@ -1,1 +1,2 @@
 headers=tpm-cpp/tpm-c.h
+compilerOpts=-fPIC

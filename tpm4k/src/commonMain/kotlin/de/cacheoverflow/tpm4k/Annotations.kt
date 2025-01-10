@@ -29,7 +29,7 @@ import kotlinx.serialization.SerialInfo
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 @OptIn(ExperimentalSerializationApi::class)
-annotation class TPMCommand(val code: Int)
+internal annotation class TPMCommand(val code: Int)
 
 /**
  * This annotation marks a response for the deserialization process.
@@ -41,4 +41,4 @@ annotation class TPMCommand(val code: Int)
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 @OptIn(ExperimentalSerializationApi::class)
-annotation class TPMResponse
+internal annotation class TPMResponse
